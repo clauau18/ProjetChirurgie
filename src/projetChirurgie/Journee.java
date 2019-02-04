@@ -10,8 +10,20 @@ public class Journee {
 	private List<Conflit> conflits;
 	private Journee projection;
 	
+	public Journee(Date date) {
+		this.date = date;
+	}
+	
 	public Journee(Date date, List<Chirurgie> chirurgies) {
 		this.date = date;
 		this.chirurgies = chirurgies;
+	}
+	
+	public void addChirurgie(Chirurgie chir) {
+		chirurgies.add(chir);
+	}
+	
+	public List<Conflit> getConflits(){
+		return this.conflits;
 	}
 }

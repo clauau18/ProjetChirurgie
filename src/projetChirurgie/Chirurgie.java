@@ -1,6 +1,7 @@
 package projetChirurgie;
 
-import java.time.Instant;
+import java.time.Duration;
+import java.time.LocalTime;
 import java.util.Date;
 
 public class Chirurgie {
@@ -9,10 +10,10 @@ public class Chirurgie {
 	private Date date;
 	private Salle salle;
 	private Chirurgien chirurgien;
-	private Instant h_deb;
-	private Instant h_fin;
+	private LocalTime h_deb;
+	private LocalTime h_fin;
 	
-	public Chirurgie(int id, Date date, Salle salle, Chirurgien chirurgien, Instant h_deb, Instant h_fin) {
+	public Chirurgie(int id, Date date, Salle salle, Chirurgien chirurgien, LocalTime h_deb, LocalTime h_fin) {
 		this.id = id;
 		this.date = date;
 		this.salle = salle;
@@ -45,17 +46,20 @@ public class Chirurgie {
 	public void setChirurgien(Chirurgien chirurgien) {
 		this.chirurgien = chirurgien;
 	}
-	public Instant getH_deb() {
+	public LocalTime getH_deb() {
 		return h_deb;
 	}
-	public void setH_deb(Instant h_deb) {
+	public void setH_deb(LocalTime h_deb) {
 		this.h_deb = h_deb;
 	}
-	public Instant getH_fin() {
+	public LocalTime getH_fin() {
 		return h_fin;
 	}
-	public void setH_fin(Instant h_fin) {
+	public void setH_fin(LocalTime h_fin) {
 		this.h_fin = h_fin;
+	}
+	public long getDuree() {
+		return Duration.between(getH_deb(),getH_fin()).toMinutes();
 	}
 	
 
