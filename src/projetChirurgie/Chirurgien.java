@@ -15,6 +15,11 @@ public class Chirurgien {
 	public void setNom(String nom) {
 		this.nom = nom;
 	}
-	
 
+	public boolean hasNom(String name) {
+		if(this.getNom().equals(name))
+			return true;
+		else
+			return false;
+	}
 }

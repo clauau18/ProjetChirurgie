@@ -16,5 +16,11 @@ public class Salle {
 		this.nom = nom;
 	}
 	
+	public boolean hasNom(String name) {
+		if(this.getNom().equals(name))
+			return true;
+		else
+			return false;
+	}
 
 }

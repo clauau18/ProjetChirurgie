@@ -9,15 +9,21 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 public class Calendrier {
 	
 	private List<Journee> planning;
+	private List<Chirurgien> chirurgiens;
+	private List<Salle> salles;
 	
 	public Calendrier() {
-		this.planning = null;
+		this.planning = new ArrayList<Journee>();
+		this.chirurgiens = new ArrayList<Chirurgien>();
+		this.salles = new ArrayList<Salle>();
+		
 	}
 	
 	public void remplissage() throws IOException {
@@ -27,6 +33,10 @@ public class Calendrier {
 	    dialog.setFile("*.csv");
 	    dialog.setVisible(true);
 	    String file =  dialog.getDirectory() + dialog.getFile();
+	    Chirurgien chir;
+	    Salle salle;
+	    
+	    
 	    String line="";
 	    int i = 0;
 	    int index = 0; // correspond au numero de la journée actuelle
@@ -38,39 +48,78 @@ public class Calendrier {
 					Date date = new Date(tab[1]);
 					LocalTime h_deb = LocalTime.parse(tab[2]);
 					LocalTime h_fin = LocalTime.parse(tab[3]);
-					Chirurgien chirurgien = Chirurgien()
-					//Attention premiere iteration planning vide
-					if (!planning.contains(date)) {
-						planning.add(new Journee(date));
-						index = index++;
+					
+					//Ajout d'un chirurgien si pas encore rentré, sinon renvoie le chirurgien correspondant
+					if (!this.hasChirurgien(tab[5])) {
+						chir = new Chirurgien(tab[5]);
+						this.chirurgiens.add(chir);
 					}
-					planning.get(index).addChirurgie(new Chirurgie(tab[0],date,salle,chir,h_deb,h_fin));
+					else
+						chir = this.getChirurgien(tab[5]);
 					
-
-					/*
-					LocalTime h_deb = LocalTime.parse(tab[2]);
-					LocalTime h_fin = LocalTime.parse(tab[3]);
-					planning.get.addChirurgie(tab[0],date,salle,);
-					if (planning.check(date))
-							planning.add(new Journee(date);
-						*/
+					//Même chose mais pour la salle
+					if (!this.hasSalle(tab[4])) {
+						salle = new Salle(tab[4]);
+						this.salles.add(salle);
+					}
+					else
+						salle = this.getSalle(tab[4]);
+					
+					//Attention premiere iteration planning vide
+					if (!this.planning.isEmpty()) {
+						if (!this.planning.get(index).isDate(date)) {
+							this.planning.add(new Journee(date));
+							index++;
+						}
+					}
+					else 
+						this.planning.add(new Journee(date));
+					this.planning.get(index).addChirurgie(new Chirurgie((i),date,salle,chir,h_deb,h_fin));
 				}
-				i++;date;
-				private List<Ch
-					
-			}
-			}		
+				i++;	
+			}	
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		/*
-		//redefinir contains (equals)
-		if (planning.contains(date)
-			planning.add(new Journee(date);
-		else
-			planning.add(new Journee( nvlle date));
-		*/
+		for(Salle c:this.salles) {
+			System.out.println(c.getNom());
+		}
 	}
 
+	public boolean hasChirurgien(String name) {
+		if(!this.chirurgiens.isEmpty()) {
+			for (Chirurgien c:this.chirurgiens) {
+				if (c.hasNom(name))
+					return true;
+			}
+		}
+		return false;
+	}
+
+	public Chirurgien getChirurgien(String name) {
+		for (Chirurgien c:this.chirurgiens) {
+			if (c.hasNom(name))
+				return c;
+		}
+		return null;
+	}
+		
+	public boolean hasSalle(String name) {
+		if(!this.salles.isEmpty()) {
+			for (Salle s:this.salles) {
+				if(s.hasNom(name))
+					return true;
+			}
+		}
+		return false;
+	}
+	
+	public Salle getSalle(String name) {
+		for (Salle s:this.salles) {
+			if (s.hasNom(name))
+				return s;
+		}
+		return null;
+	}
 }
