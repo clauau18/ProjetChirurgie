@@ -27,7 +27,7 @@ public class Calendrier {
 	}
 	
 	public void remplissage() throws IOException {
-		//Exception only csv
+		//Ouverture d'une boîte de dialogue pour selectionner le fichier csv
 	    FileDialog dialog = new FileDialog(new Frame(), "Sélectionner la base de données en csv", FileDialog.LOAD);
 	    dialog.setDirectory("../");
 	    dialog.setFile("*.csv");
@@ -35,8 +35,7 @@ public class Calendrier {
 	    String file =  dialog.getDirectory() + dialog.getFile();
 	    Chirurgien chir;
 	    Salle salle;
-	    
-	    
+	    	    
 	    String line="";
 	    int i = 0;
 	    int index = 0; // correspond au numero de la journée actuelle
@@ -74,6 +73,7 @@ public class Calendrier {
 					}
 					else 
 						this.planning.add(new Journee(date));
+					//Ajout d'une nouvelle chirurgie à la journée correspondante
 					this.planning.get(index).addChirurgie(new Chirurgie((i),date,salle,chir,h_deb,h_fin));
 				}
 				i++;	
@@ -82,7 +82,7 @@ public class Calendrier {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		for(Salle c:this.salles) {
+		for(Chirurgien c:this.chirurgiens) {
 			System.out.println(c.getNom());
 		}
 	}

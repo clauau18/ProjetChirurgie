@@ -45,8 +45,16 @@ public class Journee {
 	}
 	
 	public void generateConflits() {
-		
-		
+		int i=0;
+		int j;
+		for(this.chirurgies.get(i);i <= this.chirurgies.size();i++) {
+			j=i+1;
+			for (this.chirurgies.get(j);j <= this.chirurgies.size();j++) {
+				if(this.chirurgies.get(i).share_horaire(this.chirurgies.get(j)));
+				//si oui alors quel type
+				//this.conflits.add(new Conflit(this.chirurgies.get(i),this.chirurgies.get(j),type conflit à det))
+			}
+		}
 	}
 	
 	public void solve(Journee j) {
