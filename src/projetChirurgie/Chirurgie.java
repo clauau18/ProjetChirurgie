@@ -2,18 +2,19 @@ package projetChirurgie;
 
 import java.time.Duration;
 import java.time.LocalTime;
+import java.util.Comparator;
 import java.util.Date;
 
 public class Chirurgie {
 	
-	private int id;
+	private String id;
 	private Date date;
 	private Salle salle;
 	private Chirurgien chirurgien;
 	private LocalTime h_deb;
 	private LocalTime h_fin;
 	
-	public Chirurgie(int id, Date date, Salle salle, Chirurgien chirurgien, LocalTime h_deb, LocalTime h_fin) {
+	public Chirurgie(String id, Date date, Salle salle, Chirurgien chirurgien, LocalTime h_deb, LocalTime h_fin) {
 		this.id = id;
 		this.date = date;
 		this.salle = salle;
@@ -22,11 +23,11 @@ public class Chirurgie {
 		this.h_fin = h_fin;
 	}
 	
-	public int getId() {
+	public String getId() {
 		return id;
 	}
 	
-	public void setId(int id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 	
@@ -77,10 +78,24 @@ public class Chirurgie {
 	public boolean share_horaire(Chirurgie chir) {
 		//Partage de tout ou partie de la plage horaire
 		if(!(chir.getH_fin().isBefore(this.getH_deb()) || chir.getH_deb().isAfter(this.getH_fin()))){
-			
+			return true;
 		}
 			//chir.getH_deb().isBefore(this.getH_deb()) && chir.getH_fin().isAfter(this.getH_fin())
 			return false;
+	}
+	
+	public boolean share_salle(Chirurgie chir) {
+		if(this.salle.equals(chir.salle)) {
+			return true;
+		}
+		return false;
+	}
+	
+	public boolean share_chirurgien(Chirurgie chir) {
+		if(this.chirurgien.equals(chir.chirurgien)) {
+			return true;
+		}
+		return false;
 	}
 
 
@@ -122,4 +137,13 @@ public class Chirurgie {
 			return false;
 		return true;
 	}
+	
+	public static Comparator<Chirurgie> byDate = new Comparator<Chirurgie>() {
+
+		public int compare(Chirurgie ch1, Chirurgie ch2) {
+			if(ch1.getH_deb().compareTo(ch2.getH_deb())==0)
+				return ch1.getH_fin().compareTo(ch2.getH_fin());
+			return ch1.getH_deb().compareTo(ch2.getH_deb());
+		}
+	};
 }

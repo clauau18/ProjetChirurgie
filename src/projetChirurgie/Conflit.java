@@ -14,4 +14,16 @@ public class Conflit {
 		this.type = type;
 	}
 	
+	public ConflitType getType() {
+		return this.type;
+	}
+	
+	public Chirurgie getChira() {
+		return this.a;
+	}
+	
+	public Chirurgie getChirb() {
+		return this.b;
+	}
+	
 }

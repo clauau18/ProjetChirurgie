@@ -8,6 +8,8 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.text.SimpleDateFormat;
+import java.time.Duration;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Date;
@@ -74,16 +76,13 @@ public class Calendrier {
 					else 
 						this.planning.add(new Journee(date));
 					//Ajout d'une nouvelle chirurgie à la journée correspondante
-					this.planning.get(index).addChirurgie(new Chirurgie((i),date,salle,chir,h_deb,h_fin));
+					this.planning.get(index).addChirurgie(new Chirurgie(tab[0],date,salle,chir,h_deb,h_fin));
 				}
 				i++;	
 			}	
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
-		for(Chirurgien c:this.chirurgiens) {
-			System.out.println(c.getNom());
 		}
 	}
 
@@ -121,5 +120,47 @@ public class Calendrier {
 				return s;
 		}
 		return null;
+	}
+	
+	public List<Journee> get_planning(){
+		return this.planning;
+	}
+	
+	public void visualise(Journee j) {
+		j.sortByDate();
+		SimpleDateFormat formater = new SimpleDateFormat("dd/MM/yyyy");
+	    System.out.println(formater.format(j.getDate()));
+	    System.out.println("----------");
+	    System.out.print("                    ");
+		for (int i=8;i<=22;i++) {
+			System.out.print(i+"h         ");
+			if (i<10)
+				System.out.print(" ");
+		}
+		System.out.print("\n");
+		for(Chirurgien prac:this.chirurgiens) {
+			System.out.print(prac.getNom());
+			for (int i=0; i< 20 - prac.getNom().length(); i++)
+				System.out.print(" ");
+			for (int i=8;i<=22;i++) {
+				System.out.print("�     .     ");
+			}
+			for(Chirurgie chir:j.getChirurgies()) {
+				if (chir.getChirurgien().equals(prac)) {
+					System.out.print("\n");
+					System.out.print(chir.getId());
+					for (int i=0;i<20 - chir.getId().length();i++)
+						System.out.print(" ");
+					for(int i=0;i < Duration.between(LocalTime.parse("08:00:00"), chir.getH_deb()).toMinutes()/5;i++)
+						System.out.print(" ");
+					System.out.print(chir.getSalle().getNom());
+					for(int i=0;i< (chir.getDuree() - chir.getSalle().getNom().length())/5;i++) {
+						System.out.print("x");
+					}
+				}
+			}
+			System.out.print("\n");
+		}
+		
 	}
 }
