@@ -1,11 +1,16 @@
 package projetChirurgie;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Salle {
 	
 	private String nom;
+	private static List<String> ListSalle = new ArrayList<String>();
 
 	public Salle(String nom) {
 		this.nom = nom;
+		Salle.ListSalle.add(nom);
 	}
 	
 	public String getNom() {

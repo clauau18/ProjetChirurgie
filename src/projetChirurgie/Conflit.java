@@ -26,4 +26,10 @@ public class Conflit {
 		return this.b;
 	}
 	
+	public boolean contains(Chirurgie chir) {
+		if (this.a.equals(chir) || this.b.equals(chir))
+			return true;
+		return false;
+	}
+	
 }

@@ -1,11 +1,16 @@
 package projetChirurgie;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Chirurgien {
 
 	private String nom;
+	private static List<String> ListChir = new ArrayList<String>();
 
 	public Chirurgien(String nom) {
 		this.nom = nom;
+		Chirurgien.ListChir.add(nom);
 	}
 	
 	public String getNom() {
@@ -15,7 +20,11 @@ public class Chirurgien {
 	public void setNom(String nom) {
 		this.nom = nom;
 	}
-
+	
+	//public static List<String> ListOfAllChir(){
+		//return this.ListChir;
+	//}
+	
 	public boolean hasNom(String name) {
 		if(this.getNom().equals(name))
 			return true;

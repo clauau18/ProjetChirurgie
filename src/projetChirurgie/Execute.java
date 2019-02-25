@@ -9,14 +9,13 @@ public class Execute {
 		Calendrier cal = new Calendrier();
 		try {
 			cal.remplissage();
-			for (Journee j:cal.get_planning()) {
+			cal.visualise(cal.get_planning().get(0));
+			int compteur=0;
+			for(Journee j:cal.get_planning()) {
 				j.generateConflits();
-				System.out.println(j.getConflits().size());
-				for (Conflit c:j.getConflits()) {
-					System.out.println(c.getType());
-					System.out.println(c.getChira());
-				}
+				compteur = compteur + j.getNbConflits();
 			}
+			System.out.println(compteur);
 			//cal.visualise(cal.get_planning().get(5));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block

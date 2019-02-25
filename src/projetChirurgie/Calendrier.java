@@ -143,7 +143,7 @@ public class Calendrier {
 			for (int i=0; i< 20 - prac.getNom().length(); i++)
 				System.out.print(" ");
 			for (int i=8;i<=22;i++) {
-				System.out.print("•     .     ");
+				System.out.print(".     .     ");
 			}
 			for(Chirurgie chir:j.getChirurgies()) {
 				if (chir.getChirurgien().equals(prac)) {
@@ -154,13 +154,12 @@ public class Calendrier {
 					for(int i=0;i < Duration.between(LocalTime.parse("08:00:00"), chir.getH_deb()).toMinutes()/5;i++)
 						System.out.print(" ");
 					System.out.print(chir.getSalle().getNom());
-					for(int i=0;i< (chir.getDuree() - chir.getSalle().getNom().length())/5;i++) {
+					for(int i=0;i< (chir.getDuree())/5 - chir.getSalle().getNom().length();i++) {
 						System.out.print("x");
 					}
 				}
 			}
 			System.out.print("\n");
-		}
-		
+		}	
 	}
 }
