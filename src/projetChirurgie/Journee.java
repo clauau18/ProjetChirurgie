@@ -18,7 +18,6 @@ public class Journee {
 	public Journee(Date date) {
 		this.date = date;
 		this.chirurgies = new ArrayList<Chirurgie>();
-		this.conflits = new ArrayList<Conflit>();
 	}
 	
 	public Journee(Date date, List<Chirurgie> chirurgies) {
@@ -37,6 +36,17 @@ public class Journee {
 		return this.conflits;
 	}
 	
+	public List<Chirurgie> GetChirurgiesNoConflits(){
+		List<Chirurgie> ls = new ArrayList<Chirurgie>();
+		ls.addAll(this.chirurgies);
+		for(Conflit c:this.conflits) {
+			if(ls.contains(c.getChira()))
+				ls.remove(c.getChira());
+			if(ls.contains(c.getChirb()))
+				ls.remove(c.getChirb());
+		}
+		return ls;
+	}
 	public int getNbConflits() {
 		return this.conflits.size();
 	}
@@ -54,8 +64,18 @@ public class Journee {
 	public void sortByDate() {
 		Collections.sort(this.chirurgies, Chirurgie.byDate);
 	}
+
+	public List<Chirurgien> getChirurgiensPresents(){
+		List<Chirurgien> ls = new ArrayList<Chirurgien>();
+		for (Chirurgie chir:this.GetChirurgiesNoConflits()){
+			if (!ls.contains(chir.getChirurgien()))
+					ls.add(chir.getChirurgien());
+		}
+		return ls;
+	}
 	
 	public void generateConflits() {
+		this.conflits = new ArrayList<Conflit>();
 		int i=0;
 		int j;
 		this.sortByDate();
@@ -103,23 +123,46 @@ public class Journee {
 	public void solve(Journee j) {
 		for (Conflit c:this.getConflits()) {
 			//appeler méthode résoudre conflit c
-			if (this.projection.getNbConflits()<j.getNbConflits()) {
+			if (this.projection.getNbConflits()<j.getNbConflits() && this.projection.getNbConflits()>0) {
 				solve(this.projection);
 			}
 		}
 	}
 	
-	public void solve(Conflit c) {
-		//gestion du conflit ubiquité
-		if(c.getType().equals(ConflitType.UBIQUITE)) {
-			for (Chirurgie chir:this.chirurgies) {
-				
+	public boolean test_ubi(Conflit c,List<Chirurgien> ls) {
+		Chirurgien chir_originel = c.getChira().getChirurgien();
+		int i = 0;
+		while(i < ls.size() && this.getNbConflits() != 0) {
+			c.getChira().setChirurgien(ls.get(i));
+			this.generateConflits();
+			i++;
+		}
+		if (this.getNbConflits() != 0 ) {
+			c.getChira().setChirurgien(chir_originel);
+			chir_originel = c.getChirb().getChirurgien();
+			i = 0;
+			while(i < ls.size() && this.getNbConflits() != 0) {
+				c.getChirb().setChirurgien(ls.get(i));
+				this.generateConflits();
+				i++;
+			}
+			if (this.getNbConflits() != 0 ) {
+				c.getChirb().setChirurgien(chir_originel);
+				return false;
 			}
 		}
-		//gestion du conflit interference
-		else if(c.getType().equals(ConflitType.INTERFERENCE)) {
-			
-		}
-
+		return true;
 	}
+	
+	
+	public void solve() {
+		if (this.getNbConflits() == 1) {
+				Conflit c = this.getConflits().get(0);
+				//gestion du conflit ubiquité
+				if(c.getType().equals(ConflitType.UBIQUITE)) {
+					if(test_ubi(c,this.getChirurgiensPresents()) == false)
+						System.out.println("ne marche pas");	
+				}
+			}
+		}
 }

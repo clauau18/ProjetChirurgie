@@ -8,14 +8,21 @@ public class Execute {
 		// TODO Auto-generated method stub
 		Calendrier cal = new Calendrier();
 		try {
-			cal.remplissage();
-			cal.visualise(cal.get_planning().get(0));
 			int compteur=0;
-			for(Journee j:cal.get_planning()) {
-				j.generateConflits();
-				compteur = compteur + j.getNbConflits();
-			}
-			System.out.println(compteur);
+			cal.remplissage();
+			cal.visualise(cal.get_planning().get(compteur));
+			cal.get_planning().get(compteur).generateConflits();
+			System.out.println(cal.get_planning().get(compteur).getNbConflits());
+			cal.get_planning().get(compteur).solve();
+			System.out.println("prout");
+			System.out.println(cal.get_planning().get(compteur).getNbConflits());
+			cal.visualise(cal.get_planning().get(compteur));
+
+			//for(Journee j:cal.get_planning()) {
+				//j.generateConflits();
+				//System.out.println(j.getChirurgies().get(0).getH_deb().compareTo(j.getChirurgies().get(1).getH_deb()));
+				//compteur = compteur + j.getNbConflits();
+			//}
 			//cal.visualise(cal.get_planning().get(5));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block

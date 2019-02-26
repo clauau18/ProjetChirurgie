@@ -77,7 +77,7 @@ public class Chirurgie {
 	
 	public boolean share_horaire(Chirurgie chir) {
 		//Partage de tout ou partie de la plage horaire
-		if(!(chir.getH_fin().isBefore(this.getH_deb()) || chir.getH_deb().isAfter(this.getH_fin()))){
+		if(!chir.getH_deb().isAfter(this.getH_fin())){
 			return true;
 		}
 		return false;
@@ -96,7 +96,6 @@ public class Chirurgie {
 		}
 		return false;
 	}
-
 
 	@Override
 	public boolean equals(Object obj) {
