@@ -11,15 +11,12 @@ public class Execute {
 		try {
 			int compteur=9;
 			cal.remplissage();
-			int conf = 0;
-			int conf_restant = 0;
-			String jour="";
 			//cal.visualise(cal.get_planning().get(compteur));
 			for(Journee j:cal.get_planning()) {
 				j.solve();
 			}
-			cal.exportToCsv("minibose");
 			cal.close_Historique();
+			cal.exportToCsv("Base_correction");
 			System.out.println("fin");
 		
 			//cal.get_planning().get(compteur).solve();

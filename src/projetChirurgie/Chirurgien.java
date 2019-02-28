@@ -24,11 +24,7 @@ public class Chirurgien {
 	public static List<Chirurgien> getListChir(){
 		return ListChir;
 	}
-	
-	//public static List<String> ListOfAllChir(){
-		//return this.ListChir;
-	//}
-	
+		
 	public boolean hasNom(String name) {
 		if(this.getNom().equals(name))
 			return true;

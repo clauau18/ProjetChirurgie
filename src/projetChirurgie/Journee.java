@@ -1,7 +1,5 @@
 package projetChirurgie;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -26,15 +24,26 @@ public class Journee {
 		this.chirurgies = chirurgies;
 	}
 	
+	public Date getDate() {
+		return this.date;
+	}
+	
+	public boolean isDate(Date date) {
+		if (this.getDate().equals(date))
+			return true;
+		return false;
+	}
+	
+	public void sortByDate() {
+		Collections.sort(this.chirurgies, Chirurgie.byDate);
+	}
+
 	public void addChirurgie(Chirurgie chir) {
 		this.chirurgies.add(chir);
 	}
 	
 	public List<Chirurgie> getChirurgies(){
 		return this.chirurgies;
-	}
-	public List<Conflit> getConflits(){
-		return this.conflits;
 	}
 	
 	public List<Chirurgie> GetChirurgiesConflits(){
@@ -59,23 +68,15 @@ public class Journee {
 		}
 		return ls;
 	}
+	
+	public List<Conflit> getConflits(){
+		return this.conflits;
+	}
+	
 	public int getNbConflits() {
 		return this.conflits.size();
 	}
-	
-	public Date getDate() {
-		return this.date;
-	}
-	
-	public boolean isDate(Date date) {
-		if (this.getDate().equals(date))
-			return true;
-		return false;
-	}
-	
-	public void sortByDate() {
-		Collections.sort(this.chirurgies, Chirurgie.byDate);
-	}
+				
 	/**
 	 * 
 	 * @return liste des chirurgiens n'ayant pas de conflits.
@@ -135,7 +136,7 @@ public class Journee {
 	
 	public  Map<String,Integer> NbofConflitsMap(){
 		Map<String,Integer> mp = new HashMap<String,Integer>();
-		for(Conflit c1:this.getConflits()){
+		for(Conflit c1:this.conflits){
 			if (!mp.containsKey(c1.getChira().getId())) 
 				mp.put(c1.getChira().getId(),nbOfConflitsWith(c1.getChira()));
 			if (!mp.containsKey(c1.getChirb().getId())) 
@@ -143,6 +144,7 @@ public class Journee {
 		}
 		return mp;
 	}
+	
 	
 	public void solve(Journee j) {
 		for (Conflit c:this.getConflits()) {
@@ -173,6 +175,7 @@ public class Journee {
 			}
 			if (this.getNbConflits() >= nb_conf ) {
 				c.getChirb().setChirurgien(chir_originel);
+				this.generateConflits();
 				return false;
 			}
 			else {
@@ -207,6 +210,7 @@ public class Journee {
 			}
 			if (this.getNbConflits() >= nb_conf ) {
 				c.getChirb().setSalle(salle_originel);
+				this.generateConflits();
 				return false;
 			}
 			else {
@@ -215,13 +219,11 @@ public class Journee {
 			}
 		}
 		else {
-			Calendrier.getHistorique().println("UBIQUITE RESOLUE");
+			Calendrier.getHistorique().println("INTERFERENCE RESOLUE");
 			Calendrier.getHistorique().println("Modification chirurgie " +c.getChira().getId() + " : " + salle_originel.getNom() + " --> " + ls.get(i-1).getNom());
-		}	
+		}
 		return true;
 	}
-	
-
 	
 	/**
 	 * Résoud les differents types de conflits en fonction de la priorité : chirugiens sans conflits > Chirurgiens en conflits > Chirurgiens non present
@@ -234,7 +236,7 @@ public class Journee {
 		Calendrier.getHistorique().println(("Journée du " + Calendrier.getDateFormat().format(this.date)));
 		Calendrier.getHistorique().println(("---------------------"));
 		Calendrier.getHistorique().println(this.conflits.size() + " conflit(s)");
-		while(this.getNbConflits() > 0 && i != this.getNbConflits()){
+		while(this.getNbConflits() > 0 && i < this.getNbConflits()){
 				if (solved) {
 					this.generateConflits();
 					i = 0;
@@ -244,21 +246,23 @@ public class Journee {
 				//gestion du conflit ubiquité
 				if(c.getType().equals(ConflitType.UBIQUITE)) {
 					if(test_ubi(c,this.getChirurgiensPresents(this.GetChirurgiesNoConflits())) == false) {
-						if(test_ubi(c,this.getChirurgiensPresents(this.GetChirurgiesConflits()))== false)
+						if(test_ubi(c,this.getChirurgiensPresents(this.GetChirurgiesConflits()))== false) {
 							if(test_ubi(c,Chirurgien.getListChir()) == false) {
-								i = i + 1;
-								System.out.println("bloqué");
+								i = i + 1;	
 								solved = false;
 							}
+						}	
 					}
 				}
 				else if(c.getType().equals(ConflitType.INTERFERENCE)) {
-					if(test_interf(c,this.getSallesPresents(this.GetChirurgiesNoConflits())) == false)
-						if(test_interf(c,this.getSallesPresents(this.GetChirurgiesConflits())) == false)
+					if(test_interf(c,this.getSallesPresents(this.GetChirurgiesNoConflits())) == false) {
+						if(test_interf(c,this.getSallesPresents(this.GetChirurgiesConflits())) == false) {
 							if(test_interf(c,Salle.getListSalle()) == false) {
 								i = i + 1;
 								solved = false;
 							}
+						}	
+					}
 				}
 				else {
 					i = i+1;

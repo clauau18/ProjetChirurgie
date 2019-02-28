@@ -6,10 +6,8 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.nio.file.Path;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -22,17 +20,13 @@ import java.util.List;
 public class Calendrier {
 	
 	private List<Journee> planning;
-	private List<Chirurgien> chirurgiens;
-	private List<Salle> salles;
 	private static PrintWriter historique;
 	private static DateFormat dateFormat = new SimpleDateFormat("dd/mm/yyyy");
 	
 	public Calendrier() {
 		this.planning = new ArrayList<Journee>();
-		this.chirurgiens = new ArrayList<Chirurgien>();
-		this.salles = new ArrayList<Salle>();
 		try {
-			historique = new PrintWriter(new File("../historique.txt"));
+			historique = new PrintWriter(new File("../historique_correction.txt"));
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -50,6 +44,46 @@ public class Calendrier {
 	
 	public static DateFormat getDateFormat() {
 		return dateFormat;
+	}
+	
+	public boolean hasChirurgien(String name) {
+		if(!Chirurgien.getListChir().isEmpty()) {
+			for (Chirurgien c:Chirurgien.getListChir()) {
+				if (c.hasNom(name))
+					return true;
+			}
+		}
+		return false;
+	}
+
+	public Chirurgien getChirurgien(String name) {
+		for (Chirurgien c:Chirurgien.getListChir()) {
+			if (c.hasNom(name))
+				return c;
+		}
+		return null;
+	}
+		
+	public boolean hasSalle(String name) {
+		if(!Salle.getListSalle().isEmpty()) {
+			for (Salle s:Salle.getListSalle()) {
+				if(s.hasNom(name))
+					return true;
+			}
+		}
+		return false;
+	}
+	
+	public Salle getSalle(String name) {
+		for (Salle s:Salle.getListSalle()) {
+			if (s.hasNom(name))
+				return s;
+		}
+		return null;
+	}
+	
+	public List<Journee> get_planning(){
+		return this.planning;
 	}
 	
 	public void remplissage() throws IOException, ParseException {
@@ -78,7 +112,6 @@ public class Calendrier {
 					//Ajout d'un chirurgien si pas encore rentré, sinon renvoie le chirurgien correspondant
 					if (!this.hasChirurgien(tab[5])) {
 						chir = new Chirurgien(tab[5]);
-						this.chirurgiens.add(chir);
 					}
 					else
 						chir = this.getChirurgien(tab[5]);
@@ -86,7 +119,6 @@ public class Calendrier {
 					//Même chose mais pour la salle
 					if (!this.hasSalle(tab[4])) {
 						salle = new Salle(tab[4]);
-						this.salles.add(salle);
 					}
 					else
 						salle = this.getSalle(tab[4]);
@@ -113,46 +145,6 @@ public class Calendrier {
 
 	}
 
-	public boolean hasChirurgien(String name) {
-		if(!this.chirurgiens.isEmpty()) {
-			for (Chirurgien c:this.chirurgiens) {
-				if (c.hasNom(name))
-					return true;
-			}
-		}
-		return false;
-	}
-
-	public Chirurgien getChirurgien(String name) {
-		for (Chirurgien c:this.chirurgiens) {
-			if (c.hasNom(name))
-				return c;
-		}
-		return null;
-	}
-		
-	public boolean hasSalle(String name) {
-		if(!this.salles.isEmpty()) {
-			for (Salle s:this.salles) {
-				if(s.hasNom(name))
-					return true;
-			}
-		}
-		return false;
-	}
-	
-	public Salle getSalle(String name) {
-		for (Salle s:this.salles) {
-			if (s.hasNom(name))
-				return s;
-		}
-		return null;
-	}
-	
-	public List<Journee> get_planning(){
-		return this.planning;
-	}
-	
 	public void visualise(Journee j) {
 		j.sortByDate();
 	    System.out.println(dateFormat.format(j.getDate()));
@@ -164,7 +156,7 @@ public class Calendrier {
 				System.out.print(" ");
 		}
 		System.out.print("\n");
-		for(Chirurgien prac:this.chirurgiens) {
+		for(Chirurgien prac:Chirurgien.getListChir()) {
 			System.out.print(prac.getNom());
 			for (int i=0; i< 20 - prac.getNom().length(); i++)
 				System.out.print(" ");
@@ -188,6 +180,7 @@ public class Calendrier {
 			System.out.print("\n");
 		}	
 	}
+	
 	/**
 	 * Export la base en un nouveau CSV
 	 * @param nomFichier : Nom a donner au fichier
