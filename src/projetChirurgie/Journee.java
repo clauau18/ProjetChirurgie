@@ -1,5 +1,6 @@
 package projetChirurgie;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -154,52 +155,69 @@ public class Journee {
 	
 	public boolean test_ubi(Conflit c,List<Chirurgien> ls) {
 		Chirurgien chir_originel = c.getChira().getChirurgien();
+		int nb_conf = this.getNbConflits();
 		int i = 0;
-		while(i < ls.size() && this.getNbConflits() != 0) {
+		while(i < ls.size() && this.getNbConflits() >= nb_conf) {
 			c.getChira().setChirurgien(ls.get(i));
 			this.generateConflits();
 			i++;
 		}
-		if (this.getNbConflits() != 0 ) {
+		if (this.getNbConflits() >= nb_conf ) {
 			c.getChira().setChirurgien(chir_originel);
 			chir_originel = c.getChirb().getChirurgien();
 			i = 0;
-			while(i < ls.size() && this.getNbConflits() != 0) {
+			while(i < ls.size() && this.getNbConflits() >= nb_conf) {
 				c.getChirb().setChirurgien(ls.get(i));
 				this.generateConflits();
 				i++;
 			}
-			if (this.getNbConflits() != 0 ) {
+			if (this.getNbConflits() >= nb_conf ) {
 				c.getChirb().setChirurgien(chir_originel);
 				return false;
 			}
+			else {
+				Calendrier.getHistorique().println("UBIQUITE RESOLUE");
+				Calendrier.getHistorique().println("Modification chirurgie " + c.getChirb().getId() + " : " + chir_originel.getNom() + " --> " + ls.get(i-1).getNom());
+			}
+		}
+		else {
+			Calendrier.getHistorique().println("UBIQUITE RESOLUE");
+			Calendrier.getHistorique().println("Modification chirurgie " +c.getChira().getId() + " : " + chir_originel.getNom() + " --> " + ls.get(i-1).getNom());
 		}
 		return true;
 	}
 	
 	public boolean test_interf(Conflit c,List<Salle> ls) {
 		Salle salle_originel = c.getChira().getSalle();
+		int nb_conf = this.getNbConflits();
 		int i = 0;
-		while(i < ls.size() && this.getNbConflits() != 0) {
+		while(i < ls.size() && this.getNbConflits() >= nb_conf) {
 			c.getChira().setSalle(ls.get(i));
 			this.generateConflits();
 			i++;
 		}
-		if (this.getNbConflits() != 0 ) {
+		if (this.getNbConflits() >= nb_conf ) {
 			c.getChira().setSalle(salle_originel);
 			salle_originel = c.getChirb().getSalle();
 			i = 0;
-			while(i < ls.size() && this.getNbConflits() != 0) {
+			while(i < ls.size() && this.getNbConflits() >= nb_conf) {
 				c.getChirb().setSalle(ls.get(i));
 				this.generateConflits();
 				i++;
 			}
-			if (this.getNbConflits() != 0 ) {
+			if (this.getNbConflits() >= nb_conf ) {
 				c.getChirb().setSalle(salle_originel);
 				return false;
 			}
-			
+			else {
+				Calendrier.getHistorique().println("INTERFERENCE RESOLUE");
+				Calendrier.getHistorique().println("Modification chirurgie " + c.getChirb().getId() + " : " + salle_originel.getNom() + " --> " + ls.get(i-1).getNom());
+			}
 		}
+		else {
+			Calendrier.getHistorique().println("UBIQUITE RESOLUE");
+			Calendrier.getHistorique().println("Modification chirurgie " +c.getChira().getId() + " : " + salle_originel.getNom() + " --> " + ls.get(i-1).getNom());
+		}	
 		return true;
 	}
 	
@@ -209,21 +227,44 @@ public class Journee {
 	 * Résoud les differents types de conflits en fonction de la priorité : chirugiens sans conflits > Chirurgiens en conflits > Chirurgiens non present
 	 */
 	public void solve() {
+		int i = 0;
+		boolean solved;
+		solved = false;
 		this.generateConflits();
-		if (this.getNbConflits() == 1) {
-				Conflit c = this.getConflits().get(0);
+		Calendrier.getHistorique().println(("Journée du " + Calendrier.getDateFormat().format(this.date)));
+		Calendrier.getHistorique().println(("---------------------"));
+		Calendrier.getHistorique().println(this.conflits.size() + " conflit(s)");
+		while(this.getNbConflits() > 0 && i != this.getNbConflits()){
+				if (solved) {
+					this.generateConflits();
+					i = 0;
+				}
+				Conflit c = this.getConflits().get(i);
+				solved = true;
 				//gestion du conflit ubiquité
 				if(c.getType().equals(ConflitType.UBIQUITE)) {
 					if(test_ubi(c,this.getChirurgiensPresents(this.GetChirurgiesNoConflits())) == false) {
 						if(test_ubi(c,this.getChirurgiensPresents(this.GetChirurgiesConflits()))== false)
-							if(test_ubi(c,Chirurgien.getListChir()) == false);
+							if(test_ubi(c,Chirurgien.getListChir()) == false) {
+								i = i + 1;
+								System.out.println("bloqué");
+								solved = false;
+							}
 					}
 				}
 				else if(c.getType().equals(ConflitType.INTERFERENCE)) {
 					if(test_interf(c,this.getSallesPresents(this.GetChirurgiesNoConflits())) == false)
 						if(test_interf(c,this.getSallesPresents(this.GetChirurgiesConflits())) == false)
-							if(test_interf(c,Salle.getListSalle()) == false);
+							if(test_interf(c,Salle.getListSalle()) == false) {
+								i = i + 1;
+								solved = false;
+							}
+				}
+				else {
+					i = i+1;
+					solved = false;
 				}
 			}
+		Calendrier.getHistorique().println('\n');
 		}
 }

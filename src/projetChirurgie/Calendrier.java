@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.Path;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.time.LocalTime;
@@ -23,15 +24,35 @@ public class Calendrier {
 	private List<Journee> planning;
 	private List<Chirurgien> chirurgiens;
 	private List<Salle> salles;
+	private static PrintWriter historique;
+	private static DateFormat dateFormat = new SimpleDateFormat("dd/mm/yyyy");
 	
 	public Calendrier() {
 		this.planning = new ArrayList<Journee>();
 		this.chirurgiens = new ArrayList<Chirurgien>();
 		this.salles = new ArrayList<Salle>();
+		try {
+			historique = new PrintWriter(new File("../historique.txt"));
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 	}
 	
-	public void remplissage() throws IOException {
+	public static PrintWriter getHistorique() {
+		return historique;
+	}
+	
+	public void close_Historique() {
+		historique.close();
+	}
+	
+	public static DateFormat getDateFormat() {
+		return dateFormat;
+	}
+	
+	public void remplissage() throws IOException, ParseException {
 		//Ouverture d'une boîte de dialogue pour selectionner le fichier csv
 	    FileDialog dialog = new FileDialog(new Frame(), "Sélectionner la base de données en csv", FileDialog.LOAD);
 	    dialog.setDirectory("../");
@@ -49,7 +70,8 @@ public class Calendrier {
 			while ((line = br.readLine()) != null){
 				if (i > 0) {
 					String[] tab = line.split(",");
-					Date date = new Date(tab[1]);
+					Date date = new Date();
+					date = dateFormat.parse(tab[1]);
 					LocalTime h_deb = LocalTime.parse(tab[2]);
 					LocalTime h_fin = LocalTime.parse(tab[3]);
 					
@@ -82,11 +104,13 @@ public class Calendrier {
 					this.planning.get(index).addChirurgie(new Chirurgie(tab[0],date,salle,chir,h_deb,h_fin));
 				}
 				i++;	
-			}	
+			}
+			br.close();
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+
 	}
 
 	public boolean hasChirurgien(String name) {
@@ -131,8 +155,7 @@ public class Calendrier {
 	
 	public void visualise(Journee j) {
 		j.sortByDate();
-		SimpleDateFormat formater = new SimpleDateFormat("dd/MM/yyyy");
-	    System.out.println(formater.format(j.getDate()));
+	    System.out.println(dateFormat.format(j.getDate()));
 	    System.out.println("----------");
 	    System.out.print("                    ");
 		for (int i=8;i<=22;i++) {
@@ -186,16 +209,14 @@ public class Calendrier {
 		sb.append(",");
 		sb.append("CHIRURGIEN CHIRUGIE");
 		sb.append('\n');
-		writer.write(sb.toString());
-		DateFormat realDate = new SimpleDateFormat("dd/mm/yyyy");
-		
+		writer.write(sb.toString());		
 		for(Journee journee : this.planning) {
 			
 				for(Chirurgie chir:journee.getChirurgies()) {
 					sb = new StringBuilder();
 					sb.append(chir.getId());
 					sb.append(",");
-					sb.append(realDate.format(chir.getDate()));
+					sb.append(dateFormat.format(chir.getDate()));
 					sb.append(",");
 					sb.append(chir.getH_deb().toString());
 					sb.append(",");
@@ -205,15 +226,10 @@ public class Calendrier {
 					sb.append(",");
 					sb.append(chir.getChirurgien().getNom());
 					sb.append('\n');
-					writer.write(sb.toString());
-					
+					writer.write(sb.toString());				
 				}
-				
-				
-			
 		}
-		writer.close();
-		
+		writer.close();	
 	}
 	
 }

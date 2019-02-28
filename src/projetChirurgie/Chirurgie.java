@@ -16,6 +16,8 @@ public class Chirurgie {
 	public static Comparator<Chirurgie> byDate = new Comparator<Chirurgie>() {
 
 		public int compare(Chirurgie ch1, Chirurgie ch2) {
+			if (ch1.getH_deb().compareTo(ch2.getH_deb()) == 0)
+				return ch1.getH_fin().compareTo(ch2.getH_fin());	
 			return ch1.getH_deb().compareTo(ch2.getH_deb());
 		}
 	};
