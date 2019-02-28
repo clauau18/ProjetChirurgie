@@ -209,6 +209,7 @@ public class Journee {
 	 * Résoud les differents types de conflits en fonction de la priorité : chirugiens sans conflits > Chirurgiens en conflits > Chirurgiens non present
 	 */
 	public void solve() {
+		this.generateConflits();
 		if (this.getNbConflits() == 1) {
 				Conflit c = this.getConflits().get(0);
 				//gestion du conflit ubiquité

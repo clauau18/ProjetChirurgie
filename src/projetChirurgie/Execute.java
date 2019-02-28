@@ -10,13 +10,18 @@ public class Execute {
 		try {
 			int compteur=2;
 			cal.remplissage();
-			cal.visualise(cal.get_planning().get(compteur));
-			cal.get_planning().get(compteur).generateConflits();
-			System.out.println(cal.get_planning().get(compteur).getNbConflits());
-			cal.get_planning().get(compteur).solve();
-			System.out.println("prout");
-			System.out.println(cal.get_planning().get(compteur).getNbConflits());
-			cal.visualise(cal.get_planning().get(compteur));
+			//cal.visualise(cal.get_planning().get(compteur));
+			for(Journee j:cal.get_planning()) {
+				j.solve();
+				System.out.println(j.getNbConflits());
+			}
+			
+
+		
+			//cal.get_planning().get(compteur).solve();
+			
+			//System.out.println(cal.get_planning().get(compteur).getNbConflits());
+			//cal.visualise(cal.get_planning().get(compteur));
 
 			//for(Journee j:cal.get_planning()) {
 				//j.generateConflits();
