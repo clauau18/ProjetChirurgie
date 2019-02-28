@@ -6,8 +6,11 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.nio.file.Path;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.time.LocalTime;
@@ -162,4 +165,55 @@ public class Calendrier {
 			System.out.print("\n");
 		}	
 	}
+	/**
+	 * Export la base en un nouveau CSV
+	 * @param nomFichier : Nom a donner au fichier
+	 * 
+	 */
+	public void exportToCsv(String nomFichier) throws FileNotFoundException {
+		PrintWriter writer = new PrintWriter(new File("../"+nomFichier+".csv"));
+		StringBuilder sb = new StringBuilder();
+		// en tête
+		sb.append("ID CHIRUGIE");
+		sb.append(",");
+		sb.append("DATE CHIRUGIE");
+		sb.append(",");
+		sb.append("HEURE_DEBUT CHIRUGIE");
+		sb.append(",");
+		sb.append("HEURE_FIN CHIRUGIE");
+		sb.append(",");
+		sb.append("SALLE CHIRUGIE");
+		sb.append(",");
+		sb.append("CHIRURGIEN CHIRUGIE");
+		sb.append('\n');
+		writer.write(sb.toString());
+		DateFormat realDate = new SimpleDateFormat("dd/mm/yyyy");
+		
+		for(Journee journee : this.planning) {
+			
+				for(Chirurgie chir:journee.getChirurgies()) {
+					sb = new StringBuilder();
+					sb.append(chir.getId());
+					sb.append(",");
+					sb.append(realDate.format(chir.getDate()));
+					sb.append(",");
+					sb.append(chir.getH_deb().toString());
+					sb.append(",");
+					sb.append(chir.getH_fin());
+					sb.append(",");
+					sb.append(chir.getSalle().getNom());
+					sb.append(",");
+					sb.append(chir.getChirurgien().getNom());
+					sb.append('\n');
+					writer.write(sb.toString());
+					
+				}
+				
+				
+			
+		}
+		writer.close();
+		
+	}
+	
 }

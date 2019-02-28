@@ -15,6 +15,7 @@ public class Execute {
 				j.solve();
 				System.out.println(j.getNbConflits());
 			}
+			cal.exportToCsv("minibose");
 			
 
 		
