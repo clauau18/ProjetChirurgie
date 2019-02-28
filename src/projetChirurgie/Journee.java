@@ -36,6 +36,17 @@ public class Journee {
 		return this.conflits;
 	}
 	
+	public List<Chirurgie> GetChirurgiesConflits(){
+		List<Chirurgie> ls = new ArrayList<Chirurgie>();
+		for(Conflit c:this.conflits) {
+			if(!ls.contains(c.getChira()))
+				ls.add(c.getChira());
+			if(!ls.contains(c.getChirb()))
+				ls.add(c.getChirb());
+		}
+		return ls;
+	}
+	
 	public List<Chirurgie> GetChirurgiesNoConflits(){
 		List<Chirurgie> ls = new ArrayList<Chirurgie>();
 		ls.addAll(this.chirurgies);
@@ -64,12 +75,24 @@ public class Journee {
 	public void sortByDate() {
 		Collections.sort(this.chirurgies, Chirurgie.byDate);
 	}
-
-	public List<Chirurgien> getChirurgiensPresents(){
+	/**
+	 * 
+	 * @return liste des chirurgiens n'ayant pas de conflits.
+	 */
+	public List<Chirurgien> getChirurgiensPresents(List<Chirurgie> listchir){
 		List<Chirurgien> ls = new ArrayList<Chirurgien>();
-		for (Chirurgie chir:this.GetChirurgiesNoConflits()){
+		for (Chirurgie chir:listchir){
 			if (!ls.contains(chir.getChirurgien()))
 					ls.add(chir.getChirurgien());
+		}
+		return ls;
+	}
+	
+	public List<Salle> getSallesPresents(List<Chirurgie>listchir){
+		List<Salle> ls = new ArrayList<Salle>();
+		for (Chirurgie chir:listchir){
+			if (!ls.contains(chir.getSalle()))
+					ls.add(chir.getSalle());
 		}
 		return ls;
 	}
@@ -154,14 +177,51 @@ public class Journee {
 		return true;
 	}
 	
+	public boolean test_interf(Conflit c,List<Salle> ls) {
+		Salle salle_originel = c.getChira().getSalle();
+		int i = 0;
+		while(i < ls.size() && this.getNbConflits() != 0) {
+			c.getChira().setSalle(ls.get(i));
+			this.generateConflits();
+			i++;
+		}
+		if (this.getNbConflits() != 0 ) {
+			c.getChira().setSalle(salle_originel);
+			salle_originel = c.getChirb().getSalle();
+			i = 0;
+			while(i < ls.size() && this.getNbConflits() != 0) {
+				c.getChirb().setSalle(ls.get(i));
+				this.generateConflits();
+				i++;
+			}
+			if (this.getNbConflits() != 0 ) {
+				c.getChirb().setSalle(salle_originel);
+				return false;
+			}
+			
+		}
+		return true;
+	}
 	
+
+	
+	/**
+	 * Résoud les differents types de conflits en fonction de la priorité : chirugiens sans conflits > Chirurgiens en conflits > Chirurgiens non present
+	 */
 	public void solve() {
 		if (this.getNbConflits() == 1) {
 				Conflit c = this.getConflits().get(0);
 				//gestion du conflit ubiquité
 				if(c.getType().equals(ConflitType.UBIQUITE)) {
-					if(test_ubi(c,this.getChirurgiensPresents()) == false)
-						System.out.println("ne marche pas");	
+					if(test_ubi(c,this.getChirurgiensPresents(this.GetChirurgiesNoConflits())) == false) {
+						if(test_ubi(c,this.getChirurgiensPresents(this.GetChirurgiesConflits()))== false)
+							if(test_ubi(c,Chirurgien.getListChir()) == false);
+					}
+				}
+				else if(c.getType().equals(ConflitType.INTERFERENCE)) {
+					if(test_interf(c,this.getSallesPresents(this.GetChirurgiesNoConflits())) == false)
+						if(test_interf(c,this.getSallesPresents(this.GetChirurgiesConflits())) == false)
+							if(test_interf(c,Salle.getListSalle()) == false);
 				}
 			}
 		}

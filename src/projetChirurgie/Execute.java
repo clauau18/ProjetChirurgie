@@ -8,7 +8,7 @@ public class Execute {
 		// TODO Auto-generated method stub
 		Calendrier cal = new Calendrier();
 		try {
-			int compteur=0;
+			int compteur=2;
 			cal.remplissage();
 			cal.visualise(cal.get_planning().get(compteur));
 			cal.get_planning().get(compteur).generateConflits();

@@ -13,6 +13,12 @@ public class Chirurgie {
 	private Chirurgien chirurgien;
 	private LocalTime h_deb;
 	private LocalTime h_fin;
+	public static Comparator<Chirurgie> byDate = new Comparator<Chirurgie>() {
+
+		public int compare(Chirurgie ch1, Chirurgie ch2) {
+			return ch1.getH_deb().compareTo(ch2.getH_deb());
+		}
+	};
 	
 	public Chirurgie(String id, Date date, Salle salle, Chirurgien chirurgien, LocalTime h_deb, LocalTime h_fin) {
 		this.id = id;
@@ -136,10 +142,5 @@ public class Chirurgie {
 		return true;
 	}
 	
-	public static Comparator<Chirurgie> byDate = new Comparator<Chirurgie>() {
 
-		public int compare(Chirurgie ch1, Chirurgie ch2) {
-			return ch1.getH_deb().compareTo(ch2.getH_deb());
-		}
-	};
 }

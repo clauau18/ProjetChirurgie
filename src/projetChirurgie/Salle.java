@@ -6,15 +6,19 @@ import java.util.List;
 public class Salle {
 	
 	private String nom;
-	private static List<String> ListSalle = new ArrayList<String>();
+	private static List<Salle> ListSalle = new ArrayList<Salle>();
 
 	public Salle(String nom) {
 		this.nom = nom;
-		Salle.ListSalle.add(nom);
+		Salle.ListSalle.add(this);
 	}
 	
 	public String getNom() {
 		return nom;
+	}
+	
+	public static List<Salle> getListSalle() {
+		return ListSalle;
 	}
 
 	public void setNom(String nom) {

@@ -6,11 +6,11 @@ import java.util.List;
 public class Chirurgien {
 
 	private String nom;
-	private static List<String> ListChir = new ArrayList<String>();
+	private static List<Chirurgien> ListChir = new ArrayList<Chirurgien>();
 
 	public Chirurgien(String nom) {
 		this.nom = nom;
-		Chirurgien.ListChir.add(nom);
+		Chirurgien.ListChir.add(this);
 	}
 	
 	public String getNom() {
@@ -19,6 +19,10 @@ public class Chirurgien {
 
 	public void setNom(String nom) {
 		this.nom = nom;
+	}
+	
+	public static List<Chirurgien> getListChir(){
+		return ListChir;
 	}
 	
 	//public static List<String> ListOfAllChir(){
