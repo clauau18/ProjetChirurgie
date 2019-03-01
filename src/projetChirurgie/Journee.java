@@ -14,12 +14,20 @@ public class Journee {
 	private List<Chirurgie> chirurgies;
 	private List<Conflit> conflits;
 	private Journee projection;
-	
+	/**
+	 * Constructeur
+	 * @param date - date de la journée
+	 */
 	public Journee(Date date) {
 		this.date = date;
 		this.chirurgies = new ArrayList<Chirurgie>();
 	}
 	
+	/**
+	 * Constructeur
+	 * @param date - date de la journée
+	 * @param chirurgies liste de chirurgies
+	 */
 	public Journee(Date date, List<Chirurgie> chirurgies) {
 		this.date = date;
 		this.chirurgies = chirurgies;
@@ -34,13 +42,18 @@ public class Journee {
 			return true;
 		return false;
 	}
+	
 	/**
 	 * tri les chirurgies par date
 	 */
 	public void sortByDate() {
 		Collections.sort(this.chirurgies, Chirurgie.byDate);
 	}
-
+	
+	/**
+	 * Ajoute une chirurgie a la journée
+	 * @param chir chirurgie a ajouter
+	 */
 	public void addChirurgie(Chirurgie chir) {
 		this.chirurgies.add(chir);
 	}
@@ -63,6 +76,7 @@ public class Journee {
 		}
 		return ls;
 	}
+	
 	/**
 	 * Retournes la liste des chirurgies n'étant impliqué dans aucun conflit
 	 * @return Chirurgies n'ayant pas de conflits
