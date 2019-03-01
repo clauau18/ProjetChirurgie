@@ -1,5 +1,6 @@
 package projetChirurgie;
 
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -223,6 +224,19 @@ public class Journee {
 			Calendrier.getHistorique().println("Modification chirurgie " +c.getChira().getId() + " : " + salle_originel.getNom() + " --> " + ls.get(i-1).getNom());
 		}
 		return true;
+	}
+	
+	public boolean test_chevauchement_decalage(Conflit c) {
+		int nb_conf = this.getNbConflits();
+		LocalTime h_Deb_Origin_a = c.getChira().getH_deb();
+		LocalTime h_Fin_Origin_a = c.getChira().getH_fin();
+		LocalTime h_Deb_Origin_b = c.getChirb().getH_deb();
+		LocalTime h_Fin_Origin_b = c.getChirb().getH_fin();
+		c.getChira().translateToLeft(c.intersectionTime());
+		if (this.getNbConflits() >= nb_conf) {
+			c.set
+		}
+		
 	}
 	
 	/**

@@ -184,7 +184,7 @@ public class Calendrier {
 	}
 	
 	/**
-	 * Export la base en un nouveau CSV
+	 * Export de la base dans un nouveau CSV
 	 * @param nomFichier : Nom a donner au fichier
 	 * 
 	 */
