@@ -17,11 +17,13 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+
 public class Calendrier {
 	
 	private List<Journee> planning;
 	private static PrintWriter historique;
 	private static DateFormat dateFormat = new SimpleDateFormat("dd/mm/yyyy");
+	
 	
 	public Calendrier() {
 		this.planning = new ArrayList<Journee>();

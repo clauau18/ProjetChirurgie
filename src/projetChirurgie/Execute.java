@@ -9,15 +9,20 @@ public class Execute {
 		// TODO Auto-generated method stub
 		Calendrier cal = new Calendrier();
 		try {
-			int compteur=9;
+			int nb_conf=0;
+			int nb_res=0;
 			cal.remplissage();
 			//cal.visualise(cal.get_planning().get(compteur));
 			for(Journee j:cal.get_planning()) {
+				j.generateConflits();
+				nb_conf += j.getNbConflits();
 				j.solve();
+				nb_res += j.getNbConflits();
 			}
+			System.out.println("Nombre de conflits détéctés : " + nb_conf);
+			System.out.println("Nombre de conflits résolus : " + (nb_conf - nb_res));
 			cal.close_Historique();
 			cal.exportToCsv("Base_correction");
-			System.out.println("fin");
 		
 			//cal.get_planning().get(compteur).solve();
 			

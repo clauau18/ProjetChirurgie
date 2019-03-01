@@ -1,6 +1,6 @@
 package projetChirurgie;
 
-
+import java.time.Duration;
 
 public class Conflit {
 
@@ -26,6 +26,25 @@ public class Conflit {
 		return this.b;
 	}
 	
+
+	
+	/*
+	 * @return renvoie faux si une des chirugies du conflit est incluse dans l'autre (en terme de plage horaire)
+	 */
+	public boolean IsIntersection() {
+		if(this.a.getH_fin().isBefore(this.b.getH_fin()))
+			return true;
+		return false;
+	}
+		
+	/**
+	 * 
+	 * @return le temps de l'intersection
+	 */
+	public Long intersectionTime() {
+		return Duration.between(this.getChirb().getH_deb(),this.getChira().getH_fin()).toMinutes();
+	}
+		
 	public boolean contains(Chirurgie chir) {
 		if (this.a.equals(chir) || this.b.equals(chir))
 			return true;

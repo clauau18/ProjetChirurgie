@@ -4,6 +4,7 @@ import java.time.Duration;
 import java.time.LocalTime;
 import java.util.Comparator;
 import java.util.Date;
+import static java.time.temporal.ChronoUnit.MINUTES;
 
 public class Chirurgie {
 	
@@ -81,6 +82,16 @@ public class Chirurgie {
 	
 	public long getDuree() {
 		return Duration.between(getH_deb(),getH_fin()).toMinutes();
+	}
+	
+	public void translateToLeft(long min) {
+		this.h_deb = h_deb.minus(min,MINUTES);
+		this.h_fin = h_fin.minus(min,MINUTES);
+	}
+	
+	public void translateToRight(long min) {
+		this.h_deb = h_deb.plus(min,MINUTES);
+		this.h_fin = h_fin.plus(min,MINUTES);
 	}
 	
 	public boolean share_horaire(Chirurgie chir) {
