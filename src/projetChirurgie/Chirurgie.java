@@ -83,17 +83,27 @@ public class Chirurgie {
 	public long getDuree() {
 		return Duration.between(getH_deb(),getH_fin()).toMinutes();
 	}
-	
+	/**
+	 * Translate un temps dans le passé par un certains nombres de minutes
+	 * @param min - Temps de translation
+	 */
 	public void translateToLeft(long min) {
 		this.h_deb = h_deb.minus(min,MINUTES);
 		this.h_fin = h_fin.minus(min,MINUTES);
 	}
-	
+	/**
+	 * Translate un temps dans le futur par un certains nombres de minutes
+	 * @param min - Temps de translation
+	 */
 	public void translateToRight(long min) {
 		this.h_deb = h_deb.plus(min,MINUTES);
 		this.h_fin = h_fin.plus(min,MINUTES);
 	}
-	
+	/**
+	 * Informe de savoir si deux chirurgies partage une plage horaire
+	 * @param chir la chirurgie comparée
+	 * @return true si partage de plage horaire
+	 */
 	public boolean share_horaire(Chirurgie chir) {
 		//Partage de tout ou partie de la plage horaire
 		if(!chir.getH_deb().isAfter(this.getH_fin())){
@@ -101,14 +111,22 @@ public class Chirurgie {
 		}
 		return false;
 	}
-	
+	/**
+	 * Informe si deux chirurgies partagent une salle
+	 * @param chir la chirurgie comparée
+	 * @return true si les chirurgies partagent une salle
+	 */
 	public boolean share_salle(Chirurgie chir) {
 		if(this.salle.equals(chir.salle)) {
 			return true;
 		}
 		return false;
 	}
-	
+	/**
+	 * Informe si deux chirurgies partagent un meme chirurgien
+	 * @param chir le chirurgie comparée
+	 * @return true si les deux chirurgies partagent un chirurgien
+	 */
 	public boolean share_chirurgien(Chirurgie chir) {
 		if(this.chirurgien.equals(chir.chirurgien)) {
 			return true;

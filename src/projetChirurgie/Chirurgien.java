@@ -24,7 +24,11 @@ public class Chirurgien {
 	public static List<Chirurgien> getListChir(){
 		return ListChir;
 	}
-		
+	/**
+	 * Compare deux noms	
+	 * @param name un nom
+	 * @return true si les noms sont les memes
+	 */
 	public boolean hasNom(String name) {
 		if(this.getNom().equals(name))
 			return true;

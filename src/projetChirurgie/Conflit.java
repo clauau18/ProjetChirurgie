@@ -26,7 +26,7 @@ public class Conflit {
 		return this.b;
 	}
 	
-	/*
+	/**
 	 * @return renvoie faux si une des chirugies du conflit est incluse dans l'autre (en terme de plage horaire)
 	 */
 	public boolean IsIntersection() {

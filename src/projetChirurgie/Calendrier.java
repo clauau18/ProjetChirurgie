@@ -35,7 +35,10 @@ public class Calendrier {
 		}
 		
 	}
-	
+	/**
+	 * 
+	 * @return L'historique accessible de n'importe ou
+	 */
 	public static PrintWriter getHistorique() {
 		return historique;
 	}
@@ -87,7 +90,12 @@ public class Calendrier {
 	public List<Journee> get_planning(){
 		return this.planning;
 	}
-	
+	/**
+	 * Lie le fichier CSV de 6 colonnes et ajoute au planning chaque occurence du fichier en les stockant dans les variables adaptés.
+	 * ID DATE SALLE CHIRURGIEN H_DEB _H_FIN
+	 * @throws IOException
+	 * @throws ParseException
+	 */
 	public void remplissage() throws IOException, ParseException {
 		//Ouverture d'une boîte de dialogue pour selectionner le fichier csv
 	    FileDialog dialog = new FileDialog(new Frame(), "Sélectionner la base de données en csv", FileDialog.LOAD);
@@ -146,7 +154,9 @@ public class Calendrier {
 		}
 
 	}
-
+	/**
+	 * Creer une visualisation du planning d'une journée
+	 */
 	public void visualise(Journee j) {
 		j.sortByDate();
 	    System.out.println(dateFormat.format(j.getDate()));
@@ -225,6 +235,31 @@ public class Calendrier {
 				}
 		}
 		writer.close();	
+	}
+	
+	/**
+	 * 
+	 * Lance l'application, répare la base de données selon solve()
+	 */
+	public void launch() {
+		try {
+		int nb_conf=0;
+		int nb_res=0;
+		//cal.visualise(cal.get_planning().get(compteur));
+		for(Journee j:this.get_planning()) {
+			j.generateConflits();
+			nb_conf += j.getNbConflits();
+			j.solve();
+			nb_res += j.getNbConflits();
+		}
+		System.out.println("Nombre de conflits détéctés : " + nb_conf);
+		System.out.println("Nombre de conflits résolus : " + (nb_conf - nb_res));
+		this.close_Historique();
+		this.exportToCsv("Base_correction");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 }

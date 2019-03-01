@@ -34,7 +34,9 @@ public class Journee {
 			return true;
 		return false;
 	}
-	
+	/**
+	 * tri les chirurgies par date
+	 */
 	public void sortByDate() {
 		Collections.sort(this.chirurgies, Chirurgie.byDate);
 	}
@@ -46,7 +48,11 @@ public class Journee {
 	public List<Chirurgie> getChirurgies(){
 		return this.chirurgies;
 	}
-	
+	/**
+	 * Retourne une liste contenant tous les chirurgies ayant des conflits dans la journée
+	 * 
+	 * @return la liste des chirurgies impliquée dans des conflits.
+	 */
 	public List<Chirurgie> GetChirurgiesConflits(){
 		List<Chirurgie> ls = new ArrayList<Chirurgie>();
 		for(Conflit c:this.conflits) {
@@ -57,7 +63,10 @@ public class Journee {
 		}
 		return ls;
 	}
-	
+	/**
+	 * Retournes la liste des chirurgies n'étant impliqué dans aucun conflit
+	 * @return Chirurgies n'ayant pas de conflits
+	 */
 	public List<Chirurgie> GetChirurgiesNoConflits(){
 		List<Chirurgie> ls = new ArrayList<Chirurgie>();
 		ls.addAll(this.chirurgies);
@@ -91,6 +100,12 @@ public class Journee {
 		return ls;
 	}
 	
+	 
+	/**
+	 * Retourne les différentes salles utilisées dans une certaine listes de chirurgies 
+	 * @param listchir - les chirurgies sur dans lesquels on va rechercher les salles
+ 	 * @return La liste des differents salles
+	 */
 	public List<Salle> getSallesPresents(List<Chirurgie>listchir){
 		List<Salle> ls = new ArrayList<Salle>();
 		for (Chirurgie chir:listchir){
@@ -99,7 +114,13 @@ public class Journee {
 		}
 		return ls;
 	}
-	
+	/**
+	 * Creer de nouveaux conflits en leur attribuant un typeConflit : Ubiquité, Interference, Chevauchement.
+	 * Si deux chirurgies partagent deux horaires : c'est un conflit. <br/>
+	 *  Si pendant ce partage, la salle est la ressource en commun : C'est une interference <br/>
+	 *  Si pendant ce partage, le chirurgien est la ressource en commun : C'est une ubiquité <br/>	 *  
+	 *  Si pendant ce partage, le chirurgien et la salle sont partagées : C'est un chevauchement <br/>
+	 */
 	public void generateConflits() {
 		this.conflits = new ArrayList<Conflit>();
 		int i=0;
@@ -125,7 +146,11 @@ public class Journee {
 			}
 		}
 	}
-	
+	/**
+	 * Retourne le nombre de conflit dans la journée lié a une chirurgie spécifiée
+	 * @param chir - La chirurgie donto n veut compter le nombre de conflits
+	 * @return le nombre de conflits
+	 */
 	public int nbOfConflitsWith(Chirurgie chir) {
 		int compteur = 0;
 		for(Conflit c:this.getConflits()) {
@@ -156,6 +181,12 @@ public class Journee {
 		}
 	}
 	
+	/**
+	 * Methode qui resout un conflit de type ubiquité en plus de mettre a jour l'historique
+	 * @param c conflit provoquant une ubiquité
+	 * @param ls la liste des salles
+	 * @return true si la modification a bien été effectué
+	 */
 	public boolean test_ubi(Conflit c,List<Chirurgien> ls) {
 		Chirurgien chir_originel = c.getChira().getChirurgien();
 		int nb_conf = this.getNbConflits();
@@ -191,6 +222,12 @@ public class Journee {
 		return true;
 	}
 	
+	/**
+	 * Methode qui resout un conflit de type interference en plus de mettre a jour l'historique
+	 * @param c conflit provoquant une interference 
+	 * @param ls la liste des salles
+	 * @return true si la modification a bien été effectué
+	 */
 	public boolean test_interf(Conflit c,List<Salle> ls) {
 		Salle salle_originel = c.getChira().getSalle();
 		int nb_conf = this.getNbConflits();
@@ -225,7 +262,7 @@ public class Journee {
 		}
 		return true;
 	}
-	
+	/*
 	public boolean test_chevauchement_decalage(Conflit c) {
 		int nb_conf = this.getNbConflits();
 		LocalTime h_Deb_Origin_a = c.getChira().getH_deb();
@@ -237,10 +274,12 @@ public class Journee {
 			c.set
 		}
 		
-	}
+	}*/
 	
 	/**
 	 * Résoud les differents types de conflits en fonction de la priorité : chirugiens sans conflits > Chirurgiens en conflits > Chirurgiens non present
+	 * Utilise les methodes test_ubi(), test_interf, test_Chevauc </br>
+	 * + Remplie l'historique
 	 */
 	public void solve() {
 		int i = 0;
