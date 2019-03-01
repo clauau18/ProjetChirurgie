@@ -2,6 +2,7 @@ package projetChirurgie;
 
 import java.time.Duration;
 import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
 import java.util.Comparator;
 import java.util.Date;
 
@@ -81,6 +82,16 @@ public class Chirurgie {
 	
 	public long getDuree() {
 		return Duration.between(getH_deb(),getH_fin()).toMinutes();
+	}
+	
+	public void decalage_left(Chirurgie chir) {
+		setH_deb(getH_deb().minus(chir.getH_fin().until(chir.getH_deb(),ChronoUnit.HOURS),ChronoUnit.HOURS));
+		setH_fin(getH_deb().minus(chir.getH_fin().until(chir.getH_deb(),ChronoUnit.HOURS),ChronoUnit.HOURS));
+	}
+	
+	public void translate_right(Chirurgie chir) {
+		setH_deb(getH_deb().plus(chir.getH_fin().until(chir.getH_deb(),ChronoUnit.HOURS),ChronoUnit.HOURS));
+		setH_fin(getH_deb().minus(chir.getH_fin().until(chir.getH_deb(),ChronoUnit.HOURS),ChronoUnit.HOURS));
 	}
 	
 	public boolean share_horaire(Chirurgie chir) {

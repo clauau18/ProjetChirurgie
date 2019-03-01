@@ -1,5 +1,7 @@
 package projetChirurgie;
 
+import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -225,6 +227,19 @@ public class Journee {
 		return true;
 	}
 	
+	public boolean test_chevauc(Conflit c,List<Salle> ls, List<Chirurgien> lc) {
+		Salle salle_originel = c.getChira().getSalle();
+		Chirurgien chir_originel = c.getChira().getChirurgien();
+		
+		int i = 0;
+		//resoudre par decalage 
+		LocalTime h = LocalTime.of(8,0);
+		if(!(c.getChira().getH_deb().isAfter(h)) || !(c.getChira().getH_deb().minus(c.getChira().getH_deb().until(c.getChirb().getH_deb(),ChronoUnit.HOURS),ChronoUnit.HOURS).isAfter(h))) {
+			c.getChira().decalage_left(c.getChirb());
+		}
+		return true;
+	}
+	
 	/**
 	 * Résoud les differents types de conflits en fonction de la priorité : chirugiens sans conflits > Chirurgiens en conflits > Chirurgiens non present
 	 */
@@ -265,6 +280,11 @@ public class Journee {
 					}
 				}
 				else {
+					System.out.println(c.getChira().getH_deb().toString());
+					System.out.println(c.getChira().getH_deb());
+					System.out.println(c.getChira().getH_fin().until(c.getChirb().getH_deb(),ChronoUnit.HOURS));
+					System.out.println(c.getChira().getH_deb().minus(c.getChira().getH_deb().until(c.getChirb().getH_deb(),ChronoUnit.HOURS),ChronoUnit.HOURS).toString());
+
 					i = i+1;
 					solved = false;
 				}

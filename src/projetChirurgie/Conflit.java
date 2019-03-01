@@ -32,4 +32,16 @@ public class Conflit {
 		return false;
 	}
 	
+	/**
+	 * @return Si True le conflit est une intersection : les heures de debut et de fin des conflits se superposent ou juste le debut superposent la fin (Ex : les deux commencent a 8 et finissent a 10h
+	 * le but est pouvoir ajouter une duree inter operatoire
+	 * Sinon juste une inclusion
+	 */
+	public boolean isIntersection(Conflit c) {
+		if( (this.getChira().getH_deb() == this.getChirb().getH_deb() && this.getChira().getH_fin() == this.getChirb().getH_fin()) || this.getChira().getH_fin() == this.getChirb().getH_deb() ) {
+			return true;
+		}
+		return false;
+	}
+	
 }
